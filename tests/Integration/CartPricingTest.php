@@ -91,4 +91,17 @@ class CartPricingTest extends AbstractCartTestCase
         $this->assertSame($kept, $cart->getItems()->first());
         $this->assertSame(3000, $cart->calcPriceFinal());
     }
+
+    public function testSameChoiceAddsToItsLine(): void
+    {
+        $shirt = $this->product(2000, 0, 'shirt', 'shirt')->setMaxPerCart(3);
+        $cart = $this->carts()->create();
+
+        $line = $this->carts()->addProduct($cart, $shirt, quantity: 2);
+        $this->assertSame($line, $this->carts()->addProduct($cart, $shirt, quantity: 2));
+
+        $this->assertCount(1, $cart->getItems());
+        $this->assertSame(3, $line->getQuantity());
+        $this->assertSame(6000, $cart->calcPriceFinal());
+    }
 }

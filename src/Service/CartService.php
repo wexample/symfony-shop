@@ -90,6 +90,17 @@ class CartService
             throw new \InvalidArgumentException(sprintf('Product "%s" has a fixed price.', $product->getSlug()));
         }
 
+        // The same thing chosen again is one more of it, within the
+        // product's limit — not a second line.
+        if ($same = $this->findSameItem($cart, $product, $amount, $schedule, $variations, $comment)) {
+            $total = $same->getQuantity() + $quantity;
+            $same->setQuantity(null === $product->getMaxPerCart() ? $total : min($total, $product->getMaxPerCart()));
+            $cart->touch();
+            $this->entityManager->flush();
+
+            return $same;
+        }
+
         $item = new CartItem();
         $item->setProduct($product, $amount ?? $this->resolvePrice($product, $cart))
             ->setSchedule($schedule)
@@ -114,6 +125,44 @@ class CartService
         $this->entityManager->flush();
 
         return $item;
+    }
+
+    /**
+     * @param ProductVariation[] $variations
+     */
+    private function findSameItem(
+        Cart $cart,
+        Product $product,
+        ?int $amount,
+        ?Schedule $schedule,
+        array $variations,
+        ?string $comment,
+    ): ?CartItem {
+        // A free amount, a comment: each one is given apart.
+        if (null !== $amount || null !== $comment) {
+            return null;
+        }
+
+        $ids = static fn (iterable $variations): array => array_map(
+            static fn (ProductVariation $variation) => (string) $variation->getId(),
+            is_array($variations) ? $variations : iterator_to_array($variations)
+        );
+        $wanted = $ids($variations);
+        sort($wanted);
+
+        foreach ($cart->getItems() as $item) {
+            $chosen = $ids($item->getVariations());
+            sort($chosen);
+
+            if ($item->getProduct() === $product
+                && $item->getSchedule() === $schedule
+                && null === $item->getComment()
+                && $chosen === $wanted) {
+                return $item;
+            }
+        }
+
+        return null;
     }
 
     /**
