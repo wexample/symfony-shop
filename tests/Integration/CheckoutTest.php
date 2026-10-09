@@ -4,7 +4,7 @@ namespace Wexample\SymfonyCart\Tests\Integration;
 
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
-use Wexample\SymfonyCart\Entity\CartAddress;
+use Wexample\SymfonyGeo\Entity\AbstractAddress;
 use Wexample\SymfonyCart\Entity\ProductAvailability;
 use Wexample\SymfonyCart\Entity\Schedule;
 use Wexample\SymfonyCart\Enum\CartStatus;
@@ -33,12 +33,17 @@ class CheckoutTest extends AbstractCartTestCase
 
         $belgium = (new Country())->setIsoAlpha2Code('BE')->setIsoAlpha3Code('BEL')->setIsoNumericCode('056')->setName('Belgium');
         $this->em()->persist($belgium);
-        $address = (new CartAddress())->setPostalAddress('Rue Neuve 1')->setPostCode('1000')->setCity('Bruxelles')->setCountry($belgium);
+        $address = (new class () extends AbstractAddress {
+        })->setPostalAddress('Rue Neuve 1')->setPostCode('1000')->setCity('Bruxelles')->setCountry($belgium);
         $initiation = $this->checkout()->checkout($cart, 'card', $address);
 
         $this->assertSame(CartStatus::WaitingPayment, $cart->getStatus());
         $this->assertSame(3000, $this->provider()->requests[0]->amount);
-        $this->assertSame('BE', $cart->getBillingAddress()->getCountry()->getIsoAlpha2Code());
+        $this->assertSame('BE', $cart->getBillingAddress()->getCountryCode());
+        // Written down: the buyer's address may change, the order's does not.
+        $address->setCity('Liège');
+        $this->assertSame('Bruxelles', $cart->getBillingAddress()->getCity());
+        $this->assertNull($cart->getShippingAddress());
 
         // Frozen while the payment runs.
         try {

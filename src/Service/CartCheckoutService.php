@@ -6,11 +6,11 @@ use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Wexample\SymfonyCart\Entity\Cart;
-use Wexample\SymfonyCart\Entity\CartAddress;
 use Wexample\SymfonyCart\Enum\CartStatus;
 use Wexample\SymfonyCart\Event\CartExpiredEvent;
 use Wexample\SymfonyCart\Event\CartPaidEvent;
 use Wexample\SymfonyCart\Interface\CartItemPaidHandlerInterface;
+use Wexample\SymfonyGeo\Interface\PostalAddressInterface;
 use Wexample\SymfonyPayment\Entity\Payment;
 use Wexample\SymfonyPayment\Service\PaymentService;
 use Wexample\SymfonyRemotePayment\Class\PaymentInitiation;
@@ -42,8 +42,8 @@ class CartCheckoutService
     public function checkout(
         Cart $cart,
         string $method,
-        ?CartAddress $billingAddress = null,
-        ?CartAddress $shippingAddress = null,
+        ?PostalAddressInterface $billingAddress = null,
+        ?PostalAddressInterface $shippingAddress = null,
         ?string $returnUrl = null,
     ): ?PaymentInitiation {
         if (CartStatus::Paid === $cart->getStatus()) {

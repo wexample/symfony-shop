@@ -10,6 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Wexample\SymfonyCart\Enum\CartStatus;
 use Wexample\SymfonyCart\Exception\CartNotEditableException;
 use Wexample\SymfonyCart\Repository\CartRepository;
+use Wexample\SymfonyGeo\Entity\AddressSnapshot;
+use Wexample\SymfonyGeo\Interface\PostalAddressInterface;
 use Wexample\SymfonyHelpers\Entity\AbstractEntity;
 use Wexample\SymfonyMoney\Entity\Traits\HasPriceCurrencyTrait;
 use Wexample\SymfonyMoney\Entity\Traits\HasPriceDiscountTrait;
@@ -58,13 +60,13 @@ class Cart extends AbstractEntity implements PricedParentInterface, DiscountedIn
     #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     protected ?Payment $payment = null;
 
-    #[ORM\ManyToOne(targetEntity: CartAddress::class, cascade: ['persist'])]
-    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
-    protected ?CartAddress $billingAddress = null;
+    // The addresses given at checkout, written down as they were: an order
+    // keeps them whatever becomes of the buyer's own.
+    #[ORM\Embedded(class: AddressSnapshot::class, columnPrefix: 'billing_address_')]
+    protected AddressSnapshot $billingAddress;
 
-    #[ORM\ManyToOne(targetEntity: CartAddress::class, cascade: ['persist'])]
-    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
-    protected ?CartAddress $shippingAddress = null;
+    #[ORM\Embedded(class: AddressSnapshot::class, columnPrefix: 'shipping_address_')]
+    protected AddressSnapshot $shippingAddress;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     protected DateTimeImmutable $dateCreated;
@@ -82,6 +84,8 @@ class Cart extends AbstractEntity implements PricedParentInterface, DiscountedIn
     {
         parent::__construct();
         $this->items = new ArrayCollection();
+        $this->billingAddress = new AddressSnapshot();
+        $this->shippingAddress = new AddressSnapshot();
         $this->dateCreated = new DateTimeImmutable();
         $this->dateUpdated = $this->dateCreated;
         $this->priceTotal = 0;
@@ -241,26 +245,32 @@ class Cart extends AbstractEntity implements PricedParentInterface, DiscountedIn
         return $this;
     }
 
-    public function getBillingAddress(): ?CartAddress
+    /**
+     * Null while none was given.
+     */
+    public function getBillingAddress(): ?AddressSnapshot
     {
-        return $this->billingAddress;
+        return $this->billingAddress->isEmpty() ? null : $this->billingAddress;
     }
 
-    public function setBillingAddress(?CartAddress $address): static
+    /**
+     * Written down as `$address` reads now.
+     */
+    public function setBillingAddress(?PostalAddressInterface $address): static
     {
-        $this->billingAddress = $address;
+        $this->billingAddress = $address ? AddressSnapshot::fromAddress($address) : new AddressSnapshot();
 
         return $this;
     }
 
-    public function getShippingAddress(): ?CartAddress
+    public function getShippingAddress(): ?AddressSnapshot
     {
-        return $this->shippingAddress;
+        return $this->shippingAddress->isEmpty() ? null : $this->shippingAddress;
     }
 
-    public function setShippingAddress(?CartAddress $address): static
+    public function setShippingAddress(?PostalAddressInterface $address): static
     {
-        $this->shippingAddress = $address;
+        $this->shippingAddress = $address ? AddressSnapshot::fromAddress($address) : new AddressSnapshot();
 
         return $this;
     }
