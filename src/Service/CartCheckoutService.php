@@ -5,15 +5,15 @@ namespace Wexample\SymfonyShop\Service;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Wexample\SymfonyGeo\Interface\PostalAddressInterface;
+use Wexample\SymfonyPayment\Entity\Payment;
+use Wexample\SymfonyPayment\Service\PaymentService;
+use Wexample\SymfonyRemotePayment\Class\PaymentInitiation;
 use Wexample\SymfonyShop\Entity\Cart;
 use Wexample\SymfonyShop\Enum\CartStatus;
 use Wexample\SymfonyShop\Event\CartExpiredEvent;
 use Wexample\SymfonyShop\Event\CartPaidEvent;
 use Wexample\SymfonyShop\Interface\CartItemPaidHandlerInterface;
-use Wexample\SymfonyGeo\Interface\PostalAddressInterface;
-use Wexample\SymfonyPayment\Entity\Payment;
-use Wexample\SymfonyPayment\Service\PaymentService;
-use Wexample\SymfonyRemotePayment\Class\PaymentInitiation;
 
 /**
  * From a filled cart to a paid one.

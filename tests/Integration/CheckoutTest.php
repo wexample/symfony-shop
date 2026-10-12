@@ -5,6 +5,8 @@ namespace Wexample\SymfonyShop\Tests\Integration;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 use Wexample\SymfonyGeo\Entity\AbstractAddress;
+use Wexample\SymfonyGeo\Entity\Country;
+use Wexample\SymfonyPayment\Enum\PaymentStatus;
 use Wexample\SymfonyShop\Entity\ProductAvailability;
 use Wexample\SymfonyShop\Entity\Schedule;
 use Wexample\SymfonyShop\Enum\CartStatus;
@@ -15,8 +17,6 @@ use Wexample\SymfonyShop\Exception\OutOfStockException;
 use Wexample\SymfonyShop\Repository\CartItemRepository;
 use Wexample\SymfonyShop\Tests\Fixtures\Handler\CartEventRecorder;
 use Wexample\SymfonyShop\Tests\Fixtures\Handler\RecordingPaidHandler;
-use Wexample\SymfonyGeo\Entity\Country;
-use Wexample\SymfonyPayment\Enum\PaymentStatus;
 
 class CheckoutTest extends AbstractCartTestCase
 {

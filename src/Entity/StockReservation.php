@@ -5,9 +5,9 @@ namespace Wexample\SymfonyShop\Entity;
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Wexample\SymfonyHelpers\Entity\AbstractEntity;
 use Wexample\SymfonyShop\Enum\ReservationStatus;
 use Wexample\SymfonyShop\Repository\StockReservationRepository;
-use Wexample\SymfonyHelpers\Entity\AbstractEntity;
 
 /**
  * Units of an availability held for a cart item while its cart is being paid.

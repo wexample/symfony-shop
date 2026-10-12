@@ -6,8 +6,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Wexample\SymfonyShop\Enum\VariationPriceAction;
-use Wexample\SymfonyShop\Repository\CartItemRepository;
 use Wexample\SymfonyHelpers\Entity\AbstractEntity;
 use Wexample\SymfonyMoney\Entity\Traits\HasPriceVatTrait;
 use Wexample\SymfonyMoney\Entity\Traits\HasQuantityTrait;
@@ -16,6 +14,8 @@ use Wexample\SymfonyMoney\Interface\PricedChildInterface;
 use Wexample\SymfonyMoney\Interface\PricedParentInterface;
 use Wexample\SymfonyMoney\Interface\QuantifiedInterface;
 use Wexample\SymfonyMoney\Interface\VatRatedInterface;
+use Wexample\SymfonyShop\Enum\VariationPriceAction;
+use Wexample\SymfonyShop\Repository\CartItemRepository;
 
 /**
  * A product in a cart, priced from a snapshot taken when the product was set.

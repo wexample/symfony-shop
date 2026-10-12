@@ -7,9 +7,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Wexample\SymfonyShop\Enum\CartStatus;
-use Wexample\SymfonyShop\Exception\CartNotEditableException;
-use Wexample\SymfonyShop\Repository\CartRepository;
 use Wexample\SymfonyGeo\Entity\AddressSnapshot;
 use Wexample\SymfonyGeo\Interface\PostalAddressInterface;
 use Wexample\SymfonyHelpers\Entity\AbstractEntity;
@@ -20,6 +17,9 @@ use Wexample\SymfonyMoney\Interface\DiscountedInterface;
 use Wexample\SymfonyMoney\Interface\PricedParentInterface;
 use Wexample\SymfonyPayment\Entity\Payment;
 use Wexample\SymfonyPayment\Interface\PayableInterface;
+use Wexample\SymfonyShop\Enum\CartStatus;
+use Wexample\SymfonyShop\Exception\CartNotEditableException;
+use Wexample\SymfonyShop\Repository\CartRepository;
 
 /**
  * A cart may exist before its owner does: anonymous checkouts attach the owner

@@ -6,14 +6,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Wexample\SymfonyShop\Enum\ProductStatus;
-use Wexample\SymfonyShop\Repository\ProductRepository;
 use Wexample\SymfonyHelpers\Entity\AbstractEntity;
 use Wexample\SymfonyMoney\Entity\Traits\HasPriceCurrencyTrait;
 use Wexample\SymfonyMoney\Entity\Traits\HasPriceVatTrait;
 use Wexample\SymfonyMoney\Entity\Traits\PricedSingleTrait;
 use Wexample\SymfonyMoney\Interface\PricedInterface;
 use Wexample\SymfonyMoney\Interface\VatRatedInterface;
+use Wexample\SymfonyShop\Enum\ProductStatus;
+use Wexample\SymfonyShop\Repository\ProductRepository;
 
 /**
  * Something sold through a cart. Its price is copied into each cart item when added,

@@ -2,9 +2,9 @@
 
 namespace Wexample\SymfonyShop\Repository;
 
+use Wexample\SymfonyHelpers\Repository\AbstractRepository;
 use Wexample\SymfonyShop\Entity\CartItem;
 use Wexample\SymfonyShop\Entity\ProductAvailability;
-use Wexample\SymfonyHelpers\Repository\AbstractRepository;
 
 class ProductAvailabilityRepository extends AbstractRepository
 {

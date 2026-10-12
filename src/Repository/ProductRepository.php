@@ -2,9 +2,9 @@
 
 namespace Wexample\SymfonyShop\Repository;
 
+use Wexample\SymfonyHelpers\Repository\AbstractRepository;
 use Wexample\SymfonyShop\Entity\Product;
 use Wexample\SymfonyShop\Enum\ProductStatus;
-use Wexample\SymfonyHelpers\Repository\AbstractRepository;
 
 /**
  * @method Product|null find($id, $lockMode = null, $lockVersion = null)

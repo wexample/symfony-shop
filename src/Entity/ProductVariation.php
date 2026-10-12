@@ -4,8 +4,8 @@ namespace Wexample\SymfonyShop\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Wexample\SymfonyShop\Enum\VariationPriceAction;
 use Wexample\SymfonyHelpers\Entity\AbstractEntity;
+use Wexample\SymfonyShop\Enum\VariationPriceAction;
 
 /**
  * An option of a product (presenter / spectator, size), possibly changing the price.

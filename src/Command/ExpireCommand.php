@@ -7,11 +7,11 @@ use DateTimeImmutable;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Wexample\SymfonyHelpers\Command\AbstractBundleCommand;
+use Wexample\SymfonyHelpers\Service\BundleService;
 use Wexample\SymfonyShop\Repository\CartRepository;
 use Wexample\SymfonyShop\Service\CartCheckoutService;
 use Wexample\SymfonyShop\WexampleSymfonyShopBundle;
-use Wexample\SymfonyHelpers\Command\AbstractBundleCommand;
-use Wexample\SymfonyHelpers\Service\BundleService;
 
 /**
  * Expires carts left opened or unpaid, and gives their stock back.

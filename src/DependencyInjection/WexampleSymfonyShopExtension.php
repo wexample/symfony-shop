@@ -3,9 +3,9 @@
 namespace Wexample\SymfonyShop\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Wexample\SymfonyHelpers\DependencyInjection\AbstractWexampleSymfonyExtension;
 use Wexample\SymfonyShop\Interface\CartItemPaidHandlerInterface;
 use Wexample\SymfonyShop\Interface\PriceResolverInterface;
-use Wexample\SymfonyHelpers\DependencyInjection\AbstractWexampleSymfonyExtension;
 
 class WexampleSymfonyShopExtension extends AbstractWexampleSymfonyExtension
 {

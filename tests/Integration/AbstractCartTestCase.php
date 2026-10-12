@@ -5,12 +5,12 @@ namespace Wexample\SymfonyShop\Tests\Integration;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Wexample\SymfonyPayment\Service\PaymentService;
+use Wexample\SymfonyRemotePayment\Class\FakePaymentProvider;
 use Wexample\SymfonyShop\Entity\Product;
 use Wexample\SymfonyShop\Service\CartCheckoutService;
 use Wexample\SymfonyShop\Service\CartService;
 use Wexample\SymfonyShop\Service\StockService;
-use Wexample\SymfonyPayment\Service\PaymentService;
-use Wexample\SymfonyRemotePayment\Class\FakePaymentProvider;
 
 abstract class AbstractCartTestCase extends KernelTestCase
 {

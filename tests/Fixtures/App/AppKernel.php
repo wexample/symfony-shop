@@ -2,11 +2,11 @@
 
 namespace Wexample\SymfonyShop\Tests\Fixtures\App;
 
-use Wexample\SymfonyShop\WexampleSymfonyShopBundle;
 use Wexample\SymfonyGeo\WexampleSymfonyGeoBundle;
 use Wexample\SymfonyMoney\WexampleSymfonyMoneyBundle;
 use Wexample\SymfonyPayment\WexampleSymfonyPaymentBundle;
 use Wexample\SymfonyRemotePayment\WexampleSymfonyRemotePaymentBundle;
+use Wexample\SymfonyShop\WexampleSymfonyShopBundle;
 use Wexample\SymfonyTesting\Tests\Fixtures\AbstractFixtureKernel;
 
 class AppKernel extends AbstractFixtureKernel

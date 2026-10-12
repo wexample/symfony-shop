@@ -3,10 +3,10 @@
 namespace Wexample\SymfonyShop\Service;
 
 use Symfony\Component\Uid\Uuid;
-use Wexample\SymfonyShop\Entity\Cart;
-use Wexample\SymfonyShop\Repository\CartRepository;
 use Wexample\SymfonyPayment\Interface\PayableInterface;
 use Wexample\SymfonyPayment\Interface\PayableResolverInterface;
+use Wexample\SymfonyShop\Entity\Cart;
+use Wexample\SymfonyShop\Repository\CartRepository;
 
 class CartPayableResolver implements PayableResolverInterface
 {

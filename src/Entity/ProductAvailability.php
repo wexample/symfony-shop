@@ -4,8 +4,8 @@ namespace Wexample\SymfonyShop\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Wexample\SymfonyShop\Repository\ProductAvailabilityRepository;
 use Wexample\SymfonyHelpers\Entity\AbstractEntity;
+use Wexample\SymfonyShop\Repository\ProductAvailabilityRepository;
 
 /**
  * How many units of a product can be sold, possibly for one schedule and one

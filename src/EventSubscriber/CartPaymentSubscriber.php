@@ -4,13 +4,13 @@ namespace Wexample\SymfonyShop\EventSubscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Uid\Uuid;
-use Wexample\SymfonyShop\Entity\Cart;
-use Wexample\SymfonyShop\Repository\CartRepository;
-use Wexample\SymfonyShop\Service\CartCheckoutService;
 use Wexample\SymfonyPayment\Event\AbstractPaymentEvent;
 use Wexample\SymfonyPayment\Event\PaymentCanceledEvent;
 use Wexample\SymfonyPayment\Event\PaymentFailedEvent;
 use Wexample\SymfonyPayment\Event\PaymentSucceededEvent;
+use Wexample\SymfonyShop\Entity\Cart;
+use Wexample\SymfonyShop\Repository\CartRepository;
+use Wexample\SymfonyShop\Service\CartCheckoutService;
 
 /**
  * Completes or reopens carts when their payment changes.

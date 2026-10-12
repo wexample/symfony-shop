@@ -4,10 +4,10 @@ namespace Wexample\SymfonyShop\Repository;
 
 use DateTimeImmutable;
 use Symfony\Bridge\Doctrine\Types\UuidType;
+use Wexample\SymfonyHelpers\Repository\AbstractRepository;
 use Wexample\SymfonyShop\Entity\CartItem;
 use Wexample\SymfonyShop\Entity\Product;
 use Wexample\SymfonyShop\Enum\CartStatus;
-use Wexample\SymfonyHelpers\Repository\AbstractRepository;
 
 class CartItemRepository extends AbstractRepository
 {
