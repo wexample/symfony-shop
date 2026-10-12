@@ -1,15 +1,15 @@
 <?php
 
-namespace Wexample\SymfonyCart\Entity;
+namespace Wexample\SymfonyShop\Entity;
 
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Wexample\SymfonyCart\Enum\CartStatus;
-use Wexample\SymfonyCart\Exception\CartNotEditableException;
-use Wexample\SymfonyCart\Repository\CartRepository;
+use Wexample\SymfonyShop\Enum\CartStatus;
+use Wexample\SymfonyShop\Exception\CartNotEditableException;
+use Wexample\SymfonyShop\Repository\CartRepository;
 use Wexample\SymfonyGeo\Entity\AddressSnapshot;
 use Wexample\SymfonyGeo\Interface\PostalAddressInterface;
 use Wexample\SymfonyHelpers\Entity\AbstractEntity;

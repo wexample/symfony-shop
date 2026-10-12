@@ -1,9 +1,9 @@
 <?php
 
-namespace Wexample\SymfonyCart\Tests\Fixtures\Handler;
+namespace Wexample\SymfonyShop\Tests\Fixtures\Handler;
 
-use Wexample\SymfonyCart\Entity\CartItem;
-use Wexample\SymfonyCart\Interface\CartItemPaidHandlerInterface;
+use Wexample\SymfonyShop\Entity\CartItem;
+use Wexample\SymfonyShop\Interface\CartItemPaidHandlerInterface;
 
 class RecordingPaidHandler implements CartItemPaidHandlerInterface
 {

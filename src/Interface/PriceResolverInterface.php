@@ -1,9 +1,9 @@
 <?php
 
-namespace Wexample\SymfonyCart\Interface;
+namespace Wexample\SymfonyShop\Interface;
 
-use Wexample\SymfonyCart\Entity\Cart;
-use Wexample\SymfonyCart\Entity\Product;
+use Wexample\SymfonyShop\Entity\Cart;
+use Wexample\SymfonyShop\Entity\Product;
 
 /**
  * Chooses the unit price (before VAT) of a product for a cart: member prices,

@@ -1,13 +1,13 @@
 <?php
 
-namespace Wexample\SymfonyCart\Entity;
+namespace Wexample\SymfonyShop\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Wexample\SymfonyCart\Enum\VariationPriceAction;
-use Wexample\SymfonyCart\Repository\CartItemRepository;
+use Wexample\SymfonyShop\Enum\VariationPriceAction;
+use Wexample\SymfonyShop\Repository\CartItemRepository;
 use Wexample\SymfonyHelpers\Entity\AbstractEntity;
 use Wexample\SymfonyMoney\Entity\Traits\HasPriceVatTrait;
 use Wexample\SymfonyMoney\Entity\Traits\HasQuantityTrait;

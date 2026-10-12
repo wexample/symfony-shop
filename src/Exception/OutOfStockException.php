@@ -1,8 +1,8 @@
 <?php
 
-namespace Wexample\SymfonyCart\Exception;
+namespace Wexample\SymfonyShop\Exception;
 
-use Wexample\SymfonyCart\Entity\ProductAvailability;
+use Wexample\SymfonyShop\Entity\ProductAvailability;
 
 class OutOfStockException extends \RuntimeException
 {

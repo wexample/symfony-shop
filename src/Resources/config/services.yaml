@@ -4,18 +4,18 @@ services:
         autoconfigure: true
         public: false
 
-    Wexample\SymfonyCart\:
+    Wexample\SymfonyShop\:
         resource: '../../{Command,EventSubscriber,Repository,Service}'
 
-    Wexample\SymfonyCart\Service\CartService:
+    Wexample\SymfonyShop\Service\CartService:
         public: true
         arguments:
-            $priceResolvers: !tagged_iterator wexample_symfony_cart.price_resolver
+            $priceResolvers: !tagged_iterator wexample_symfony_shop.price_resolver
 
-    Wexample\SymfonyCart\Service\CartCheckoutService:
+    Wexample\SymfonyShop\Service\CartCheckoutService:
         public: true
         arguments:
-            $paidHandlers: !tagged_iterator wexample_symfony_cart.paid_handler
+            $paidHandlers: !tagged_iterator wexample_symfony_shop.paid_handler
 
-    Wexample\SymfonyCart\Service\StockService:
+    Wexample\SymfonyShop\Service\StockService:
         public: true

@@ -1,8 +1,8 @@
 <?php
 
-namespace Wexample\SymfonyCart\Interface;
+namespace Wexample\SymfonyShop\Interface;
 
-use Wexample\SymfonyCart\Entity\CartItem;
+use Wexample\SymfonyShop\Entity\CartItem;
 
 /**
  * What happens when an item is paid, chosen by product type: renew a membership,

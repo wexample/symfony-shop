@@ -1,8 +1,8 @@
 <?php
 
-namespace Wexample\SymfonyCart\Tests\Fixtures\App;
+namespace Wexample\SymfonyShop\Tests\Fixtures\App;
 
-use Wexample\SymfonyCart\WexampleSymfonyCartBundle;
+use Wexample\SymfonyShop\WexampleSymfonyShopBundle;
 use Wexample\SymfonyGeo\WexampleSymfonyGeoBundle;
 use Wexample\SymfonyMoney\WexampleSymfonyMoneyBundle;
 use Wexample\SymfonyPayment\WexampleSymfonyPaymentBundle;
@@ -23,7 +23,7 @@ class AppKernel extends AbstractFixtureKernel
             new WexampleSymfonyGeoBundle(),
             new WexampleSymfonyRemotePaymentBundle(),
             new WexampleSymfonyPaymentBundle(),
-            new WexampleSymfonyCartBundle(),
+            new WexampleSymfonyShopBundle(),
         ];
     }
 

@@ -1,12 +1,16 @@
 # Extract cart and catalog from network
 
 Opened: 2026-09-24
-Updated: 2026-09-24
+Updated: 2026-10-12
 Author: agent:archeology
+
+## Closed (2026-10-12)
+
+Backend done (see below). Package renamed from symfony-cart to symfony-shop; tables kept. Dropped by the owner: admin forms for variations and availabilities (#301) — catalogues are filled by each application. Not planned for now: recurring schedules (`Schedule.rule`), the tunnel as a symfony-testing scenario.
 
 ## Status (2026-10-04)
 
-Done (phases A and B): Product, ProductVariation, Schedule, ProductAvailability, StockReservation, Cart, CartItem; CartService (owner attach, limits fixed, price resolvers), CartCheckoutService (checkout through symfony-payment, completion, CartPaidEvent and per-type paid handlers, reopen, cancel, expire), StockService (locked reservations, never deletes availabilities), `cart:expire`, sales per product; 11 tests. Left: admin forms for variations and availabilities (#301), recurring schedules, the tunnel scenario as an integration test.
+Done (phases A and B): Product, ProductVariation, Schedule, ProductAvailability, StockReservation, Cart, CartItem; CartService (owner attach, limits fixed, price resolvers), CartCheckoutService (checkout through symfony-payment, completion, CartPaidEvent and per-type paid handlers, reopen, cancel, expire), StockService (locked reservations, never deletes availabilities), `shop:expire`, sales per product; 11 tests. Left: admin forms for variations and availabilities (#301), recurring schedules, the tunnel scenario as an integration test.
 
 ## Read this first — status of this todo
 
@@ -18,7 +22,7 @@ Done (phases A and B): Product, ProductVariation, Schedule, ProductAvailability,
 
 ## Goal
 
-Fill the empty `symfony-cart` package with network's cart. The owner's words: "I had worked the cart well too, I believe."
+Fill the empty `symfony-shop` package with network's cart. The owner's words: "I had worked the cart well too, I believe."
 
 Phase A is the cart itself:
 - anonymous-capable cart with a status lifecycle;
@@ -102,7 +106,7 @@ Issues, in `/home/weeger/Desktop/WIP/WEB/WEXAMPLE/NETWORK/archeo/gitlab/issues/`
    - On `PaymentSucceededEvent` whose payable is a cart: `completeCart()` sets `paid` and `datePaid`, snapshots the addresses, dispatches `CartPaidEvent`, then calls every `CartItemPaidHandlerInterface` that supports the item's product type.
    - On failure or cancel: back to `opened`.
 5. Address snapshot: on paid, freeze the cart addresses and copy them into the user's address book (network's `TYPE_ASSIGNED` / `TYPE_ADDRESS_BOOK` plus `cloneFrom`). Coordinate the entity with the organization/geo extraction.
-6. Expiry: add the command `cart:expire --older-than=PT2H`. It moves stale `opened`/`waiting_payment` carts without a succeeded payment to `expired` and releases reservations (phase B). It also dispatches `CartExpiredEvent`, so the app can delete disabled shadow users as network's `clearExpiredSession` did.
+6. Expiry: add the command `shop:expire --older-than=PT2H`. It moves stale `opened`/`waiting_payment` carts without a succeeded payment to `expired` and releases reservations (phase B). It also dispatches `CartExpiredEvent`, so the app can delete disabled shadow users as network's `clearExpiredSession` did.
 
 ### Phase B: catalog (or `symfony-product`)
 

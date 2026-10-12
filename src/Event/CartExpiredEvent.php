@@ -1,9 +1,9 @@
 <?php
 
-namespace Wexample\SymfonyCart\Event;
+namespace Wexample\SymfonyShop\Event;
 
 use Symfony\Contracts\EventDispatcher\Event;
-use Wexample\SymfonyCart\Entity\Cart;
+use Wexample\SymfonyShop\Entity\Cart;
 
 /**
  * Dispatched when an abandoned cart expires, e.g. to delete a disabled shadow user.

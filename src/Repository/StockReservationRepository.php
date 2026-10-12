@@ -1,13 +1,13 @@
 <?php
 
-namespace Wexample\SymfonyCart\Repository;
+namespace Wexample\SymfonyShop\Repository;
 
 use DateTimeImmutable;
 use Symfony\Bridge\Doctrine\Types\UuidType;
-use Wexample\SymfonyCart\Entity\Cart;
-use Wexample\SymfonyCart\Entity\ProductAvailability;
-use Wexample\SymfonyCart\Entity\StockReservation;
-use Wexample\SymfonyCart\Enum\ReservationStatus;
+use Wexample\SymfonyShop\Entity\Cart;
+use Wexample\SymfonyShop\Entity\ProductAvailability;
+use Wexample\SymfonyShop\Entity\StockReservation;
+use Wexample\SymfonyShop\Enum\ReservationStatus;
 use Wexample\SymfonyHelpers\Repository\AbstractRepository;
 
 class StockReservationRepository extends AbstractRepository

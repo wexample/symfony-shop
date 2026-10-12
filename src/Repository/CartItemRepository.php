@@ -1,12 +1,12 @@
 <?php
 
-namespace Wexample\SymfonyCart\Repository;
+namespace Wexample\SymfonyShop\Repository;
 
 use DateTimeImmutable;
 use Symfony\Bridge\Doctrine\Types\UuidType;
-use Wexample\SymfonyCart\Entity\CartItem;
-use Wexample\SymfonyCart\Entity\Product;
-use Wexample\SymfonyCart\Enum\CartStatus;
+use Wexample\SymfonyShop\Entity\CartItem;
+use Wexample\SymfonyShop\Entity\Product;
+use Wexample\SymfonyShop\Enum\CartStatus;
 use Wexample\SymfonyHelpers\Repository\AbstractRepository;
 
 class CartItemRepository extends AbstractRepository

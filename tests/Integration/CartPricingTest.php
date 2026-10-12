@@ -1,9 +1,9 @@
 <?php
 
-namespace Wexample\SymfonyCart\Tests\Integration;
+namespace Wexample\SymfonyShop\Tests\Integration;
 
-use Wexample\SymfonyCart\Entity\ProductVariation;
-use Wexample\SymfonyCart\Enum\VariationPriceAction;
+use Wexample\SymfonyShop\Entity\ProductVariation;
+use Wexample\SymfonyShop\Enum\VariationPriceAction;
 
 class CartPricingTest extends AbstractCartTestCase
 {

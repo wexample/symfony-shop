@@ -1,10 +1,10 @@
 <?php
 
-namespace Wexample\SymfonyCart\Repository;
+namespace Wexample\SymfonyShop\Repository;
 
 use DateTimeImmutable;
-use Wexample\SymfonyCart\Entity\Cart;
-use Wexample\SymfonyCart\Enum\CartStatus;
+use Wexample\SymfonyShop\Entity\Cart;
+use Wexample\SymfonyShop\Enum\CartStatus;
 use Wexample\SymfonyHelpers\Repository\AbstractRepository;
 
 /**

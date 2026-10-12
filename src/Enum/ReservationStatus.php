@@ -1,6 +1,6 @@
 <?php
 
-namespace Wexample\SymfonyCart\Enum;
+namespace Wexample\SymfonyShop\Enum;
 
 enum ReservationStatus: string
 {

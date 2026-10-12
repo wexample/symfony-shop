@@ -1,6 +1,6 @@
 <?php
 
-namespace Wexample\SymfonyCart\Entity;
+namespace Wexample\SymfonyShop\Entity;
 
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;

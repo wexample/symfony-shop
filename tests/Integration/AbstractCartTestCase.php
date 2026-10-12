@@ -1,14 +1,14 @@
 <?php
 
-namespace Wexample\SymfonyCart\Tests\Integration;
+namespace Wexample\SymfonyShop\Tests\Integration;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Wexample\SymfonyCart\Entity\Product;
-use Wexample\SymfonyCart\Service\CartCheckoutService;
-use Wexample\SymfonyCart\Service\CartService;
-use Wexample\SymfonyCart\Service\StockService;
+use Wexample\SymfonyShop\Entity\Product;
+use Wexample\SymfonyShop\Service\CartCheckoutService;
+use Wexample\SymfonyShop\Service\CartService;
+use Wexample\SymfonyShop\Service\StockService;
 use Wexample\SymfonyPayment\Service\PaymentService;
 use Wexample\SymfonyRemotePayment\Class\FakePaymentProvider;
 

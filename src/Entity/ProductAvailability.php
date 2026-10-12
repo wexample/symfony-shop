@@ -1,10 +1,10 @@
 <?php
 
-namespace Wexample\SymfonyCart\Entity;
+namespace Wexample\SymfonyShop\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Wexample\SymfonyCart\Repository\ProductAvailabilityRepository;
+use Wexample\SymfonyShop\Repository\ProductAvailabilityRepository;
 use Wexample\SymfonyHelpers\Entity\AbstractEntity;
 
 /**

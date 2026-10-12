@@ -1,10 +1,10 @@
 <?php
 
-namespace Wexample\SymfonyCart\Service;
+namespace Wexample\SymfonyShop\Service;
 
 use Symfony\Component\Uid\Uuid;
-use Wexample\SymfonyCart\Entity\Cart;
-use Wexample\SymfonyCart\Repository\CartRepository;
+use Wexample\SymfonyShop\Entity\Cart;
+use Wexample\SymfonyShop\Repository\CartRepository;
 use Wexample\SymfonyPayment\Interface\PayableInterface;
 use Wexample\SymfonyPayment\Interface\PayableResolverInterface;
 

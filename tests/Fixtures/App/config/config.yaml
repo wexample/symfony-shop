@@ -9,10 +9,10 @@ services:
       $name: fake
       $methods: [card]
 
-  Wexample\SymfonyCart\Tests\Fixtures\Handler\RecordingPaidHandler: ~
-  Wexample\SymfonyCart\Tests\Fixtures\Handler\MemberPriceResolver: ~
+  Wexample\SymfonyShop\Tests\Fixtures\Handler\RecordingPaidHandler: ~
+  Wexample\SymfonyShop\Tests\Fixtures\Handler\MemberPriceResolver: ~
 
-  Wexample\SymfonyCart\Tests\Fixtures\Handler\CartEventRecorder:
+  Wexample\SymfonyShop\Tests\Fixtures\Handler\CartEventRecorder:
     tags:
-      - { name: kernel.event_listener, event: Wexample\SymfonyCart\Event\CartPaidEvent, method: record }
-      - { name: kernel.event_listener, event: Wexample\SymfonyCart\Event\CartExpiredEvent, method: record }
+      - { name: kernel.event_listener, event: Wexample\SymfonyShop\Event\CartPaidEvent, method: record }
+      - { name: kernel.event_listener, event: Wexample\SymfonyShop\Event\CartExpiredEvent, method: record }

@@ -1,12 +1,12 @@
 <?php
 
-namespace Wexample\SymfonyCart\Entity;
+namespace Wexample\SymfonyShop\Entity;
 
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Wexample\SymfonyCart\Enum\ReservationStatus;
-use Wexample\SymfonyCart\Repository\StockReservationRepository;
+use Wexample\SymfonyShop\Enum\ReservationStatus;
+use Wexample\SymfonyShop\Repository\StockReservationRepository;
 use Wexample\SymfonyHelpers\Entity\AbstractEntity;
 
 /**

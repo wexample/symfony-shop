@@ -1,9 +1,9 @@
 <?php
 
-namespace Wexample\SymfonyCart\Repository;
+namespace Wexample\SymfonyShop\Repository;
 
-use Wexample\SymfonyCart\Entity\CartItem;
-use Wexample\SymfonyCart\Entity\ProductAvailability;
+use Wexample\SymfonyShop\Entity\CartItem;
+use Wexample\SymfonyShop\Entity\ProductAvailability;
 use Wexample\SymfonyHelpers\Repository\AbstractRepository;
 
 class ProductAvailabilityRepository extends AbstractRepository

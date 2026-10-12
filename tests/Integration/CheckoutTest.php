@@ -1,20 +1,20 @@
 <?php
 
-namespace Wexample\SymfonyCart\Tests\Integration;
+namespace Wexample\SymfonyShop\Tests\Integration;
 
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 use Wexample\SymfonyGeo\Entity\AbstractAddress;
-use Wexample\SymfonyCart\Entity\ProductAvailability;
-use Wexample\SymfonyCart\Entity\Schedule;
-use Wexample\SymfonyCart\Enum\CartStatus;
-use Wexample\SymfonyCart\Event\CartExpiredEvent;
-use Wexample\SymfonyCart\Event\CartPaidEvent;
-use Wexample\SymfonyCart\Exception\CartNotEditableException;
-use Wexample\SymfonyCart\Exception\OutOfStockException;
-use Wexample\SymfonyCart\Repository\CartItemRepository;
-use Wexample\SymfonyCart\Tests\Fixtures\Handler\CartEventRecorder;
-use Wexample\SymfonyCart\Tests\Fixtures\Handler\RecordingPaidHandler;
+use Wexample\SymfonyShop\Entity\ProductAvailability;
+use Wexample\SymfonyShop\Entity\Schedule;
+use Wexample\SymfonyShop\Enum\CartStatus;
+use Wexample\SymfonyShop\Event\CartExpiredEvent;
+use Wexample\SymfonyShop\Event\CartPaidEvent;
+use Wexample\SymfonyShop\Exception\CartNotEditableException;
+use Wexample\SymfonyShop\Exception\OutOfStockException;
+use Wexample\SymfonyShop\Repository\CartItemRepository;
+use Wexample\SymfonyShop\Tests\Fixtures\Handler\CartEventRecorder;
+use Wexample\SymfonyShop\Tests\Fixtures\Handler\RecordingPaidHandler;
 use Wexample\SymfonyGeo\Entity\Country;
 use Wexample\SymfonyPayment\Enum\PaymentStatus;
 
@@ -138,7 +138,7 @@ class CheckoutTest extends AbstractCartTestCase
         $cart->setDateUpdated(new \DateTimeImmutable('-3 hours'));
         $this->em()->flush();
 
-        $tester = new CommandTester((new Application(static::$kernel))->find('cart:expire'));
+        $tester = new CommandTester((new Application(static::$kernel))->find('shop:expire'));
         $this->assertSame(0, $tester->execute(['--older-than' => 'PT2H']));
         $this->assertStringContainsString('1 cart(s) expired', $tester->getDisplay());
 

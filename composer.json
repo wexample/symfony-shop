@@ -1,17 +1,17 @@
 {
-  "name": "wexample/symfony-cart",
+  "name": "wexample/symfony-shop",
   "description": "Cart and catalog for Symfony: price snapshots, variations, schedules, stock reservation, checkout through symfony-payment",
   "type": "library",
   "license": "MIT",
   "version": "3.0.1",
   "autoload": {
     "psr-4": {
-      "Wexample\\SymfonyCart\\": "src/"
+      "Wexample\\SymfonyShop\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Wexample\\SymfonyCart\\Tests\\": "tests/"
+      "Wexample\\SymfonyShop\\Tests\\": "tests/"
     }
   },
   "authors": [

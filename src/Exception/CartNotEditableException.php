@@ -1,8 +1,8 @@
 <?php
 
-namespace Wexample\SymfonyCart\Exception;
+namespace Wexample\SymfonyShop\Exception;
 
-use Wexample\SymfonyCart\Entity\Cart;
+use Wexample\SymfonyShop\Entity\Cart;
 
 class CartNotEditableException extends \LogicException
 {

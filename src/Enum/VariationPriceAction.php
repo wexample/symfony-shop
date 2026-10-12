@@ -1,6 +1,6 @@
 <?php
 
-namespace Wexample\SymfonyCart\Enum;
+namespace Wexample\SymfonyShop\Enum;
 
 /**
  * What choosing a variation does to the item price.

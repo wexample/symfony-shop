@@ -1,15 +1,15 @@
 <?php
 
-namespace Wexample\SymfonyCart\Command;
+namespace Wexample\SymfonyShop\Command;
 
 use DateInterval;
 use DateTimeImmutable;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Wexample\SymfonyCart\Repository\CartRepository;
-use Wexample\SymfonyCart\Service\CartCheckoutService;
-use Wexample\SymfonyCart\WexampleSymfonyCartBundle;
+use Wexample\SymfonyShop\Repository\CartRepository;
+use Wexample\SymfonyShop\Service\CartCheckoutService;
+use Wexample\SymfonyShop\WexampleSymfonyShopBundle;
 use Wexample\SymfonyHelpers\Command\AbstractBundleCommand;
 use Wexample\SymfonyHelpers\Service\BundleService;
 
@@ -28,7 +28,7 @@ class ExpireCommand extends AbstractBundleCommand
 
     public static function getBundleClassName(): string
     {
-        return WexampleSymfonyCartBundle::class;
+        return WexampleSymfonyShopBundle::class;
     }
 
     protected function configure(): void

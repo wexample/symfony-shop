@@ -1,9 +1,9 @@
 <?php
 
-namespace Wexample\SymfonyCart\Event;
+namespace Wexample\SymfonyShop\Event;
 
 use Symfony\Contracts\EventDispatcher\Event;
-use Wexample\SymfonyCart\Entity\Cart;
+use Wexample\SymfonyShop\Entity\Cart;
 
 /**
  * Dispatched once, when a cart's payment succeeded. Invoices, mails and

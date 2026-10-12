@@ -8,7 +8,7 @@
     <php>
         <env name="APP_ENV" value="test"/>
         <env name="APP_DEBUG" value="1"/>
-        <env name="KERNEL_CLASS" value="Wexample\SymfonyCart\Tests\Fixtures\App\AppKernel"/>
+        <env name="KERNEL_CLASS" value="Wexample\SymfonyShop\Tests\Fixtures\App\AppKernel"/>
     </php>
 
     <testsuites>
@@ -23,7 +23,7 @@
         </include>
         <exclude>
             <directory suffix=".php">src/DependencyInjection</directory>
-            <file>src/WexampleSymfonyCartBundle.php</file>
+            <file>src/WexampleSymfonyShopBundle.php</file>
         </exclude>
     </source>
 </phpunit>

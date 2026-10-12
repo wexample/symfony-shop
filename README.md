@@ -1,4 +1,4 @@
-# symfony_cart
+# symfony_shop
 
 Version: 3.0.1
 
@@ -21,7 +21,7 @@ $initiation = $checkoutService->checkout($cart, 'card', $billingAddress);   // c
 
 Checkout freezes the cart (`waiting_payment`), holds the stock of limited availabilities, and starts the payment — reusing an open one, replacing it when the total changed, completing a free cart at once. The payment's events then complete the cart (`paid`, `CartPaidEvent`, then each `CartItemPaidHandlerInterface` supporting the product type) or reopen it.
 
-`bin/console cart:expire --older-than=PT2H` expires abandoned carts and gives their stock back (`CartExpiredEvent`). `CartItemRepository::sumPaidSales()` gives sales per product.
+`bin/console shop:expire --older-than=PT2H` expires abandoned carts and gives their stock back (`CartExpiredEvent`). `CartItemRepository::sumPaidSales()` gives sales per product.
 
 ## Table of Contents
 

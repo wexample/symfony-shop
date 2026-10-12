@@ -1,18 +1,18 @@
 <?php
 
-namespace Wexample\SymfonyCart\Service;
+namespace Wexample\SymfonyShop\Service;
 
 use DateInterval;
 use DateTimeImmutable;
 use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManagerInterface;
-use Wexample\SymfonyCart\Entity\Cart;
-use Wexample\SymfonyCart\Entity\ProductAvailability;
-use Wexample\SymfonyCart\Entity\StockReservation;
-use Wexample\SymfonyCart\Enum\ReservationStatus;
-use Wexample\SymfonyCart\Exception\OutOfStockException;
-use Wexample\SymfonyCart\Repository\ProductAvailabilityRepository;
-use Wexample\SymfonyCart\Repository\StockReservationRepository;
+use Wexample\SymfonyShop\Entity\Cart;
+use Wexample\SymfonyShop\Entity\ProductAvailability;
+use Wexample\SymfonyShop\Entity\StockReservation;
+use Wexample\SymfonyShop\Enum\ReservationStatus;
+use Wexample\SymfonyShop\Exception\OutOfStockException;
+use Wexample\SymfonyShop\Repository\ProductAvailabilityRepository;
+use Wexample\SymfonyShop\Repository\StockReservationRepository;
 
 /**
  * Availability = quantity − units sold − units held by unexpired reservations.

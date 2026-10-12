@@ -1,6 +1,6 @@
 <?php
 
-namespace Wexample\SymfonyCart\Tests\Fixtures\Handler;
+namespace Wexample\SymfonyShop\Tests\Fixtures\Handler;
 
 class CartEventRecorder
 {

@@ -1,10 +1,10 @@
 <?php
 
-namespace Wexample\SymfonyCart\Entity;
+namespace Wexample\SymfonyShop\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Wexample\SymfonyCart\Enum\VariationPriceAction;
+use Wexample\SymfonyShop\Enum\VariationPriceAction;
 use Wexample\SymfonyHelpers\Entity\AbstractEntity;
 
 /**

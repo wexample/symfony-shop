@@ -1,15 +1,15 @@
 <?php
 
-namespace Wexample\SymfonyCart\Service;
+namespace Wexample\SymfonyShop\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Wexample\SymfonyCart\Entity\Cart;
-use Wexample\SymfonyCart\Entity\CartItem;
-use Wexample\SymfonyCart\Entity\Product;
-use Wexample\SymfonyCart\Entity\ProductVariation;
-use Wexample\SymfonyCart\Entity\Schedule;
-use Wexample\SymfonyCart\Interface\PriceResolverInterface;
-use Wexample\SymfonyCart\Repository\CartRepository;
+use Wexample\SymfonyShop\Entity\Cart;
+use Wexample\SymfonyShop\Entity\CartItem;
+use Wexample\SymfonyShop\Entity\Product;
+use Wexample\SymfonyShop\Entity\ProductVariation;
+use Wexample\SymfonyShop\Entity\Schedule;
+use Wexample\SymfonyShop\Interface\PriceResolverInterface;
+use Wexample\SymfonyShop\Repository\CartRepository;
 
 /**
  * Filling a cart. Every change refuses a cart that is no longer opened.

@@ -1,10 +1,10 @@
 <?php
 
-namespace Wexample\SymfonyCart\Tests\Fixtures\Handler;
+namespace Wexample\SymfonyShop\Tests\Fixtures\Handler;
 
-use Wexample\SymfonyCart\Entity\Cart;
-use Wexample\SymfonyCart\Entity\Product;
-use Wexample\SymfonyCart\Interface\PriceResolverInterface;
+use Wexample\SymfonyShop\Entity\Cart;
+use Wexample\SymfonyShop\Entity\Product;
+use Wexample\SymfonyShop\Interface\PriceResolverInterface;
 
 /**
  * Members (owner "member-*") pay half price.

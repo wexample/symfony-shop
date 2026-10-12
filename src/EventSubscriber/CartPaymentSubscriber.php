@@ -1,12 +1,12 @@
 <?php
 
-namespace Wexample\SymfonyCart\EventSubscriber;
+namespace Wexample\SymfonyShop\EventSubscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Uid\Uuid;
-use Wexample\SymfonyCart\Entity\Cart;
-use Wexample\SymfonyCart\Repository\CartRepository;
-use Wexample\SymfonyCart\Service\CartCheckoutService;
+use Wexample\SymfonyShop\Entity\Cart;
+use Wexample\SymfonyShop\Repository\CartRepository;
+use Wexample\SymfonyShop\Service\CartCheckoutService;
 use Wexample\SymfonyPayment\Event\AbstractPaymentEvent;
 use Wexample\SymfonyPayment\Event\PaymentCanceledEvent;
 use Wexample\SymfonyPayment\Event\PaymentFailedEvent;
