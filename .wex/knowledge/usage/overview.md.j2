@@ -18,3 +18,16 @@ $initiation = $checkoutService->checkout($cart, 'card', $billingAddress);   // c
 Checkout freezes the cart (`waiting_payment`), holds the stock of limited availabilities, and starts the payment — reusing an open one, replacing it when the total changed, completing a free cart at once. The payment's events then complete the cart (`paid`, `CartPaidEvent`, then each `CartItemPaidHandlerInterface` supporting the product type) or reopen it.
 
 `bin/console shop:expire --older-than=PT2H` expires abandoned carts and gives their stock back (`CartExpiredEvent`). `CartItemRepository::sumPaidSales()` gives sales per product.
+
+## Digital products
+
+A product of type `digital` (`Product::TYPE_DIGITAL`) sells files: media of `symfony-media`, attached with `addFile()`, which makes them restricted — the library's readers no longer open them. Once the cart is paid, `DigitalDeliveryHandler` gives one access grant per file and dispatches `DigitalGoodsDeliveredEvent` with them; whoever writes to the buyer sends each grant's link (`MediaAccessService::getUrl()`), signed and counted by the library. `getGrants($item)` finds them again for an order page.
+
+```yaml
+wexample_symfony_shop:
+  digital:
+    download_lifetime_days: 30   # 0: no end
+    download_max_uses: 5         # 0: no limit
+```
+
+A product overrides both in its metadata (`download_lifetime_days`, `download_max_uses`).

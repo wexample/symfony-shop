@@ -25,6 +25,10 @@ class WexampleSymfonyShopExtension extends AbstractWexampleSymfonyExtension
             ->registerForAutoconfiguration(PriceResolverInterface::class)
             ->addTag(self::TAG_PRICE_RESOLVER);
 
+        $config = $this->processConfiguration(new Configuration(), $configs);
+        $container->setParameter('wexample_symfony_shop.digital.download_lifetime_days', $config['digital']['download_lifetime_days']);
+        $container->setParameter('wexample_symfony_shop.digital.download_max_uses', $config['digital']['download_max_uses']);
+
         $this->loadConfig(
             __DIR__,
             $container

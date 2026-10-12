@@ -2,7 +2,9 @@
 
 namespace Wexample\SymfonyShop\Tests\Fixtures\App;
 
+use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Wexample\SymfonyGeo\WexampleSymfonyGeoBundle;
+use Wexample\SymfonyMedia\WexampleSymfonyMediaBundle;
 use Wexample\SymfonyMoney\WexampleSymfonyMoneyBundle;
 use Wexample\SymfonyPayment\WexampleSymfonyPaymentBundle;
 use Wexample\SymfonyRemotePayment\WexampleSymfonyRemotePaymentBundle;
@@ -23,6 +25,7 @@ class AppKernel extends AbstractFixtureKernel
             new WexampleSymfonyGeoBundle(),
             new WexampleSymfonyRemotePaymentBundle(),
             new WexampleSymfonyPaymentBundle(),
+            new WexampleSymfonyMediaBundle(),
             new WexampleSymfonyShopBundle(),
         ];
     }
@@ -32,5 +35,11 @@ class AppKernel extends AbstractFixtureKernel
         return [
             __DIR__.'/config/config.yaml',
         ];
+    }
+
+    protected function configureRoutes(RoutingConfigurator $routes): void
+    {
+        // The library's file routes: the links of the files sold point there.
+        $routes->import(__DIR__.'/../../../vendor/wexample/symfony-media/src/Controller', 'attribute');
     }
 }

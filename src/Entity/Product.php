@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Wexample\SymfonyHelpers\Entity\AbstractEntity;
+use Wexample\SymfonyMedia\Entity\Media;
 use Wexample\SymfonyMoney\Entity\Traits\HasPriceCurrencyTrait;
 use Wexample\SymfonyMoney\Entity\Traits\HasPriceVatTrait;
 use Wexample\SymfonyMoney\Entity\Traits\PricedSingleTrait;
@@ -26,6 +27,9 @@ use Wexample\SymfonyShop\Repository\ProductRepository;
 #[ORM\Table(name: 'cart_product')]
 class Product extends AbstractEntity implements PricedInterface, VatRatedInterface
 {
+    /** The type whose files are delivered once paid (DigitalDeliveryHandler). */
+    public const string TYPE_DIGITAL = 'digital';
+
     use PricedSingleTrait;
     use HasPriceVatTrait;
     use HasPriceCurrencyTrait;
@@ -71,11 +75,17 @@ class Product extends AbstractEntity implements PricedInterface, VatRatedInterfa
     #[ORM\OneToMany(targetEntity: ProductAvailability::class, mappedBy: 'product', cascade: ['persist'])]
     protected Collection $availabilities;
 
+    /** @var Collection<int, Media> What a digital product delivers once paid: restricted media, downloaded through grants. */
+    #[ORM\ManyToMany(targetEntity: Media::class)]
+    #[ORM\JoinTable(name: 'shop_product_file')]
+    protected Collection $files;
+
     public function __construct()
     {
         parent::__construct();
         $this->variations = new ArrayCollection();
         $this->availabilities = new ArrayCollection();
+        $this->files = new ArrayCollection();
     }
 
     public function __toString(): string
@@ -247,6 +257,33 @@ class Product extends AbstractEntity implements PricedInterface, VatRatedInterfa
             $this->availabilities->add($availability);
             $availability->setProduct($this);
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Media>
+     */
+    public function getFiles(): Collection
+    {
+        return $this->files;
+    }
+
+    /**
+     * A file sold is restricted: the library's readers no longer open it.
+     */
+    public function addFile(Media $media): static
+    {
+        if (! $this->files->contains($media)) {
+            $this->files->add($media->setRestricted(true));
+        }
+
+        return $this;
+    }
+
+    public function removeFile(Media $media): static
+    {
+        $this->files->removeElement($media);
 
         return $this;
     }
