@@ -3,7 +3,7 @@
   "description": "Cart and catalog for Symfony: price snapshots, variations, schedules, stock reservation, checkout through symfony-payment",
   "type": "library",
   "license": "MIT",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "autoload": {
     "psr-4": {
       "Wexample\\SymfonyShop\\": "src/"
