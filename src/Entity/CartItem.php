@@ -7,13 +7,14 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Wexample\SymfonyHelpers\Entity\AbstractEntity;
+use Wexample\SymfonyMoney\Entity\Traits\HasPriceDiscountTrait;
 use Wexample\SymfonyMoney\Entity\Traits\HasPriceVatTrait;
 use Wexample\SymfonyMoney\Entity\Traits\HasQuantityTrait;
 use Wexample\SymfonyMoney\Entity\Traits\PricedChildTrait;
-use Wexample\SymfonyMoney\Interface\PricedChildInterface;
+use Wexample\SymfonyMoney\Helper\RateHelper;
+use Wexample\SymfonyMoney\Interface\DiscountedInterface;
+use Wexample\SymfonyMoney\Interface\PricedLineInterface;
 use Wexample\SymfonyMoney\Interface\PricedParentInterface;
-use Wexample\SymfonyMoney\Interface\QuantifiedInterface;
-use Wexample\SymfonyMoney\Interface\VatRatedInterface;
 use Wexample\SymfonyShop\Enum\VariationPriceAction;
 use Wexample\SymfonyShop\Repository\CartItemRepository;
 
@@ -22,14 +23,19 @@ use Wexample\SymfonyShop\Repository\CartItemRepository;
  *
  * `priceBase` is the snapshot (or the amount chosen for a free-amount product);
  * variations then decide the effective raw price, or override the final price.
+ *
+ * `priceVatDefault` is the product's rate; `priceVat` the one charged to this
+ * buyer (see CartService::applyVatRates()). An overridden final price includes
+ * the default rate: charged at another one, it is reduced to its base first.
  */
 #[ORM\Entity(repositoryClass: CartItemRepository::class)]
 #[ORM\Table(name: 'cart_item')]
-class CartItem extends AbstractEntity implements PricedChildInterface, QuantifiedInterface, VatRatedInterface
+class CartItem extends AbstractEntity implements PricedLineInterface, DiscountedInterface
 {
     use PricedChildTrait;
     use HasQuantityTrait;
     use HasPriceVatTrait;
+    use HasPriceDiscountTrait;
 
     #[ORM\ManyToOne(targetEntity: Cart::class, inversedBy: 'items')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
@@ -53,6 +59,10 @@ class CartItem extends AbstractEntity implements PricedChildInterface, Quantifie
 
     #[ORM\Column(type: Types::INTEGER, nullable: true)]
     protected ?int $priceBaseOverridden = null;
+
+    /** Null on items older than the column: their rate never changed. */
+    #[ORM\Column(type: Types::INTEGER, nullable: true)]
+    protected ?int $priceVatDefault = null;
 
     #[ORM\Column(type: Types::STRING, length: 255)]
     protected string $title;
@@ -102,6 +112,7 @@ class CartItem extends AbstractEntity implements PricedChildInterface, Quantifie
         $this->product = $product;
         $this->title = $product->getTitle();
         $this->priceVat = $product->getPriceVat();
+        $this->priceVatDefault = $product->getPriceVat();
         $this->priceBase = $priceBase ?? $product->getPriceRaw();
         $this->priceBaseOverridden = $product->getPriceOverridden();
 
@@ -176,10 +187,41 @@ class CartItem extends AbstractEntity implements PricedChildInterface, Quantifie
             };
         }
 
+        if (null !== $final && $this->getPriceVatDefault() !== $this->priceVat) {
+            $base = RateHelper::extractBase($final, $this->getPriceVatDefault());
+            $final = $base + RateHelper::rateOf($base, $this->priceVat);
+        }
+
         $this->priceRaw = $raw;
         $this->priceOverridden = $final;
 
         return $this->updatePriceTotal();
+    }
+
+    public function getPriceVatDefault(): int
+    {
+        return $this->priceVatDefault ?? $this->priceVat;
+    }
+
+    /**
+     * Charges the line at the rate decided for its buyer, from its default one.
+     */
+    public function applyVatRate(int $rate): static
+    {
+        $this->priceVatDefault = $this->getPriceVatDefault();
+        $this->priceVat = $rate;
+
+        return $this->applyVariations();
+    }
+
+    public function isGoods(): bool
+    {
+        return $this->product->hasShipping();
+    }
+
+    public function getAccountNumber(): ?string
+    {
+        return $this->product->getAccountNumber();
     }
 
     public function getTitle(): string

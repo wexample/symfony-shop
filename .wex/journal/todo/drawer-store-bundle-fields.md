@@ -111,6 +111,32 @@ it and treats a buyer whose number VIES rejects as a consumer.
 
 Each step ships with its tests and its knowledge pages updated.
 
+## Done — 2026-10-13
+
+All five steps, tested, documented in each package's `usage/overview`:
+
+- money: `VatRateResolverInterface` + `DefaultVatRateResolver`; `PricedLineInterface` (title, goods,
+  revenue account) instead of a lone `AccountNumberedInterface` — accounting needs the title and the
+  goods flag too, one contract carries the three.
+- payment: `BuyerIdentifiedInterface` (address as geo's `AddressSnapshot`, what checkout writes down),
+  `PaymentEvent` kept on every notification, `PaymentService::attachProof()` + `PaymentProofAttachedEvent`.
+  Now requires `symfony-geo` and `symfony-media`.
+- shop: `AwaitingValidation` (manual gateway, stock held `P7D`), `Fulfilled` + `fulfill()`, buyer phone /
+  company / VAT number, `origin`, `dateShippingExpected`, per-line discount, `priceVatDefault` +
+  `CartService::applyVatRates()` (called by checkout), `lowStockThreshold` + `LowStockEvent`.
+  Shipping stays a line (a product of type `shipping`), no field.
+- shop-ds: new statuses on the orders pages; phone, company and VAT number asked at the address step,
+  VAT recharged right after.
+- accounting: setting `sales_ledger`, `PayableInvoicingService` + subscriber (bill on success, credit
+  note on refund), `Invoice::payment`, `ProviderPaymentMatcher` settles those bills, `AccountingVatRateResolver`
+  decorating money's (VIES through `VatNumberVerifier`, OSS through `OssService::appliesToLedger()`),
+  `PaymentProofReader` + subscriber (`proof_reading` in the payment's metadata). Requires
+  `symfony-remote-vies` and `symfony-media`.
+
+Left to the owner: the migration of the apps (cart, cart_item, cart_product_availability, payment,
+payment_event, accounting_invoice), `sales_ledger` in an app's config to invoice its payments, the
+version constraints between packages at publication.
+
 ## Diagram
 
 A Mermaid rendering of this structure was drawn during the discussion (dependencies, payment sequence,

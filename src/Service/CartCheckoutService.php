@@ -6,20 +6,26 @@ use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Wexample\SymfonyGeo\Interface\PostalAddressInterface;
+use Wexample\SymfonyPayment\Class\ManualPaymentGateway;
 use Wexample\SymfonyPayment\Entity\Payment;
+use Wexample\SymfonyPayment\Enum\PaymentStatus;
 use Wexample\SymfonyPayment\Service\PaymentService;
 use Wexample\SymfonyRemotePayment\Class\PaymentInitiation;
 use Wexample\SymfonyShop\Entity\Cart;
 use Wexample\SymfonyShop\Enum\CartStatus;
 use Wexample\SymfonyShop\Event\CartExpiredEvent;
+use Wexample\SymfonyShop\Event\CartFulfilledEvent;
 use Wexample\SymfonyShop\Event\CartPaidEvent;
 use Wexample\SymfonyShop\Interface\CartItemPaidHandlerInterface;
 
 /**
- * From a filled cart to a paid one.
+ * From a filled cart to a paid one, then a delivered one.
  *
- * checkout() freezes the cart, holds the stock and starts the payment; the payment
- * events (see CartPaymentSubscriber) then complete the cart or reopen it.
+ * checkout() charges the buyer's VAT rates, freezes the cart, holds the stock and
+ * starts the payment; the payment events (see CartPaymentSubscriber) then complete
+ * the cart or reopen it. A payment made by hand (transfer, cheque, cash) leaves the
+ * cart awaiting validation, its stock held for days, until someone confirms the
+ * money arrived. fulfill() closes a paid cart once delivered.
  */
 class CartCheckoutService
 {
@@ -28,6 +34,7 @@ class CartCheckoutService
      */
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
+        private readonly CartService $cartService,
         private readonly PaymentService $paymentService,
         private readonly StockService $stockService,
         private readonly EventDispatcherInterface $eventDispatcher,
@@ -46,7 +53,7 @@ class CartCheckoutService
         ?PostalAddressInterface $shippingAddress = null,
         ?string $returnUrl = null,
     ): ?PaymentInitiation {
-        if (CartStatus::Paid === $cart->getStatus()) {
+        if ($cart->getStatus()->isPaid()) {
             throw new \LogicException('This cart is already paid.');
         }
 
@@ -62,7 +69,7 @@ class CartCheckoutService
             $cart->setShippingAddress($shippingAddress);
         }
 
-        $cart->updatePriceTotal();
+        $this->cartService->applyVatRates($cart);
         $this->stockService->reserveCart($cart);
         $cart->setStatus(CartStatus::WaitingPayment);
 
@@ -75,15 +82,23 @@ class CartCheckoutService
         $cart->setPayment($payment);
         $this->entityManager->flush();
 
-        return $this->paymentService->initiate($payment, $returnUrl);
+        $initiation = $this->paymentService->initiate($payment, $returnUrl);
+
+        if (ManualPaymentGateway::NAME === $payment->getProvider() && PaymentStatus::Pending === $payment->getStatus()) {
+            $cart->setStatus(CartStatus::AwaitingValidation);
+            $this->stockService->holdCart($cart);
+        }
+
+        return $initiation;
     }
 
     /**
-     * Back to editing, e.g. the buyer returns to the cart from the payment page.
+     * Back to editing, e.g. the buyer returns to the cart from the payment page,
+     * or a payment made by hand was canceled.
      */
     public function reopen(Cart $cart): void
     {
-        if (CartStatus::WaitingPayment !== $cart->getStatus()) {
+        if (! in_array($cart->getStatus(), [CartStatus::WaitingPayment, CartStatus::AwaitingValidation], true)) {
             return;
         }
 
@@ -99,7 +114,7 @@ class CartCheckoutService
         Cart $cart,
         ?Payment $payment = null
     ): bool {
-        if (CartStatus::Paid === $cart->getStatus()) {
+        if ($cart->getStatus()->isPaid()) {
             return false;
         }
 
@@ -122,6 +137,30 @@ class CartCheckoutService
                 }
             }
         }
+
+        return true;
+    }
+
+    /**
+     * The paid cart was delivered: nothing left to do for it. Idempotent.
+     */
+    public function fulfill(
+        Cart $cart,
+        ?DateTimeImmutable $dateFulfilled = null
+    ): bool {
+        if (CartStatus::Fulfilled === $cart->getStatus()) {
+            return false;
+        }
+
+        if (CartStatus::Paid !== $cart->getStatus()) {
+            throw new \LogicException('Only a paid cart can be fulfilled.');
+        }
+
+        $cart->setStatus(CartStatus::Fulfilled)
+            ->setDateFulfilled($dateFulfilled ?? new DateTimeImmutable());
+        $this->entityManager->flush();
+
+        $this->eventDispatcher->dispatch(new CartFulfilledEvent($cart));
 
         return true;
     }

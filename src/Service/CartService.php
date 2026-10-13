@@ -3,6 +3,7 @@
 namespace Wexample\SymfonyShop\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Wexample\SymfonyMoney\Interface\VatRateResolverInterface;
 use Wexample\SymfonyShop\Entity\Cart;
 use Wexample\SymfonyShop\Entity\CartItem;
 use Wexample\SymfonyShop\Entity\Product;
@@ -22,6 +23,7 @@ class CartService
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly CartRepository $cartRepository,
+        private readonly VatRateResolverInterface $vatRateResolver,
         private readonly iterable $priceResolvers = [],
     ) {
     }
@@ -249,6 +251,30 @@ class CartService
     {
         foreach ($cart->getItems() as $item) {
             $item->applyVariations();
+        }
+
+        $cart->updatePriceTotal();
+        $this->entityManager->flush();
+    }
+
+    /**
+     * Charges each line the rate its buyer owes, as the installed
+     * VatRateResolverInterface decides from the billing country and the VAT
+     * number: the product's own by default, none for a business from another EU
+     * country once symfony-accounting knows the rules. Checkout calls it; call it
+     * sooner to show the buyer what they will pay.
+     */
+    public function applyVatRates(Cart $cart): void
+    {
+        $countryCode = $cart->getBillingAddress()?->getCountryCode();
+
+        foreach ($cart->getItems() as $item) {
+            $item->applyVatRate($this->vatRateResolver->resolveVatRate(
+                $item->getPriceVatDefault(),
+                $item->isGoods(),
+                $countryCode,
+                $cart->getCustomerVatNumber()
+            ));
         }
 
         $cart->updatePriceTotal();

@@ -4,17 +4,21 @@ namespace Wexample\SymfonyShop\Enum;
 
 enum CartStatus: string
 {
-    /** Being filled. The only status in which items can change. */
     case Opened = 'opened';
 
-    /** Checked out, waiting for the payment. Items are frozen. */
+    /** The buyer is on the payment page: back to the cart reopens it. */
     case WaitingPayment = 'waiting_payment';
+
+    /** Paid by hand (transfer, cheque, cash): someone has to see the money arrive. */
+    case AwaitingValidation = 'awaiting_validation';
 
     case Paid = 'paid';
 
+    /** Paid and delivered: nothing left to do for it. */
+    case Fulfilled = 'fulfilled';
+
     case Canceled = 'canceled';
 
-    /** Abandoned: left opened or unpaid too long. */
     case Expired = 'expired';
 
     case Error = 'error';
@@ -24,8 +28,13 @@ enum CartStatus: string
         return self::Opened === $this;
     }
 
+    public function isPaid(): bool
+    {
+        return in_array($this, [self::Paid, self::Fulfilled], true);
+    }
+
     public function isClosed(): bool
     {
-        return in_array($this, [self::Paid, self::Canceled, self::Expired], true);
+        return in_array($this, [self::Paid, self::Fulfilled, self::Canceled, self::Expired], true);
     }
 }

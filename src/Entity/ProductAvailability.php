@@ -31,6 +31,10 @@ class ProductAvailability extends AbstractEntity
     #[ORM\Column(type: Types::INTEGER, nullable: true)]
     protected ?int $quantity = null;
 
+    /** At or below this many units left, a sale raises LowStockEvent. */
+    #[ORM\Column(type: Types::INTEGER, nullable: true)]
+    protected ?int $lowStockThreshold = null;
+
     public function getProduct(): Product
     {
         return $this->product;
@@ -75,6 +79,18 @@ class ProductAvailability extends AbstractEntity
     public function setQuantity(?int $quantity): static
     {
         $this->quantity = $quantity;
+
+        return $this;
+    }
+
+    public function getLowStockThreshold(): ?int
+    {
+        return $this->lowStockThreshold;
+    }
+
+    public function setLowStockThreshold(?int $lowStockThreshold): static
+    {
+        $this->lowStockThreshold = $lowStockThreshold;
 
         return $this;
     }

@@ -30,9 +30,9 @@ class CartItemRepository extends AbstractRepository
             ->select('COALESCE(SUM(i.quantity), 0) AS quantity, COALESCE(SUM(i.priceTotal), 0) AS amount, COUNT(i.id) AS count')
             ->join('i.cart', 'c')
             ->where('i.product = :product')
-            ->andWhere('c.status = :paid')
+            ->andWhere('c.status IN (:paid)')
             ->setParameter('product', $product->getId(), UuidType::NAME)
-            ->setParameter('paid', CartStatus::Paid->value);
+            ->setParameter('paid', [CartStatus::Paid->value, CartStatus::Fulfilled->value]);
 
         if ($from) {
             $builder->andWhere('c.datePaid >= :from')->setParameter('from', $from);

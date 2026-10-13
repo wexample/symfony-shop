@@ -16,6 +16,7 @@ use Wexample\SymfonyMoney\Entity\Traits\PricedParentTrait;
 use Wexample\SymfonyMoney\Interface\DiscountedInterface;
 use Wexample\SymfonyMoney\Interface\PricedParentInterface;
 use Wexample\SymfonyPayment\Entity\Payment;
+use Wexample\SymfonyPayment\Interface\BuyerIdentifiedInterface;
 use Wexample\SymfonyPayment\Interface\PayableInterface;
 use Wexample\SymfonyShop\Enum\CartStatus;
 use Wexample\SymfonyShop\Exception\CartNotEditableException;
@@ -31,7 +32,7 @@ use Wexample\SymfonyShop\Repository\CartRepository;
 #[ORM\Entity(repositoryClass: CartRepository::class)]
 #[ORM\Table(name: 'cart')]
 #[ORM\Index(columns: ['status', 'date_updated'])]
-class Cart extends AbstractEntity implements PricedParentInterface, DiscountedInterface, PayableInterface
+class Cart extends AbstractEntity implements PricedParentInterface, DiscountedInterface, PayableInterface, BuyerIdentifiedInterface
 {
     use PricedParentTrait;
     use HasPriceDiscountTrait;
@@ -50,6 +51,21 @@ class Cart extends AbstractEntity implements PricedParentInterface, DiscountedIn
 
     #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     protected ?string $customerName = null;
+
+    #[ORM\Column(type: Types::STRING, length: 50, nullable: true)]
+    protected ?string $customerPhone = null;
+
+    /** Null for a private person. */
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
+    protected ?string $customerCompanyName = null;
+
+    /** With its country prefix, as typed: it decides the VAT charged (CartService::applyVatRates()). */
+    #[ORM\Column(type: Types::STRING, length: 32, nullable: true)]
+    protected ?string $customerVatNumber = null;
+
+    /** The sales channel the order came through: "web", "phone", "market"… free to the host. */
+    #[ORM\Column(type: Types::STRING, length: 50, nullable: true)]
+    protected ?string $origin = null;
 
     /** @var Collection<int, CartItem> */
     #[ORM\OneToMany(targetEntity: CartItem::class, mappedBy: 'cart', cascade: ['persist', 'remove'], orphanRemoval: true)]
@@ -76,6 +92,13 @@ class Cart extends AbstractEntity implements PricedParentInterface, DiscountedIn
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
     protected ?DateTimeImmutable $datePaid = null;
+
+    /** When the goods are expected to leave, as promised to the buyer. */
+    #[ORM\Column(type: Types::DATE_IMMUTABLE, nullable: true)]
+    protected ?DateTimeImmutable $dateShippingExpected = null;
+
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    protected ?DateTimeImmutable $dateFulfilled = null;
 
     #[ORM\Column(type: Types::JSON)]
     protected array $metadata = [];
@@ -185,6 +208,84 @@ class Cart extends AbstractEntity implements PricedParentInterface, DiscountedIn
         $this->customerName = $customerName;
 
         return $this;
+    }
+
+    public function getCustomerPhone(): ?string
+    {
+        return $this->customerPhone;
+    }
+
+    public function setCustomerPhone(?string $customerPhone): static
+    {
+        $this->customerPhone = $customerPhone;
+
+        return $this;
+    }
+
+    public function getCustomerCompanyName(): ?string
+    {
+        return $this->customerCompanyName;
+    }
+
+    public function setCustomerCompanyName(?string $customerCompanyName): static
+    {
+        $this->customerCompanyName = $customerCompanyName;
+
+        return $this;
+    }
+
+    public function getCustomerVatNumber(): ?string
+    {
+        return $this->customerVatNumber;
+    }
+
+    public function setCustomerVatNumber(?string $customerVatNumber): static
+    {
+        $this->customerVatNumber = $customerVatNumber;
+
+        return $this;
+    }
+
+    public function getOrigin(): ?string
+    {
+        return $this->origin;
+    }
+
+    public function setOrigin(?string $origin): static
+    {
+        $this->origin = $origin;
+
+        return $this;
+    }
+
+    public function getBuyerName(): ?string
+    {
+        return $this->customerName;
+    }
+
+    public function getBuyerCompanyName(): ?string
+    {
+        return $this->customerCompanyName;
+    }
+
+    public function getBuyerEmail(): ?string
+    {
+        return $this->customerEmail;
+    }
+
+    public function getBuyerPhone(): ?string
+    {
+        return $this->customerPhone;
+    }
+
+    public function getBuyerVatNumber(): ?string
+    {
+        return $this->customerVatNumber;
+    }
+
+    public function getBuyerAddress(): ?AddressSnapshot
+    {
+        return $this->getBillingAddress();
     }
 
     /**
@@ -314,6 +415,30 @@ class Cart extends AbstractEntity implements PricedParentInterface, DiscountedIn
     public function setDatePaid(?DateTimeImmutable $datePaid): static
     {
         $this->datePaid = $datePaid;
+
+        return $this;
+    }
+
+    public function getDateShippingExpected(): ?DateTimeImmutable
+    {
+        return $this->dateShippingExpected;
+    }
+
+    public function setDateShippingExpected(?DateTimeImmutable $dateShippingExpected): static
+    {
+        $this->dateShippingExpected = $dateShippingExpected;
+
+        return $this;
+    }
+
+    public function getDateFulfilled(): ?DateTimeImmutable
+    {
+        return $this->dateFulfilled;
+    }
+
+    public function setDateFulfilled(?DateTimeImmutable $dateFulfilled): static
+    {
+        $this->dateFulfilled = $dateFulfilled;
 
         return $this;
     }

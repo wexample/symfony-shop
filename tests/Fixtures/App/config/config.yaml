@@ -12,7 +12,12 @@ services:
   Wexample\SymfonyShop\Tests\Fixtures\Handler\RecordingPaidHandler: ~
   Wexample\SymfonyShop\Tests\Fixtures\Handler\MemberPriceResolver: ~
 
+  Wexample\SymfonyMoney\Interface\VatRateResolverInterface:
+    class: Wexample\SymfonyShop\Tests\Fixtures\Handler\ReverseChargeVatRateResolver
+
   Wexample\SymfonyShop\Tests\Fixtures\Handler\CartEventRecorder:
     tags:
       - { name: kernel.event_listener, event: Wexample\SymfonyShop\Event\CartPaidEvent, method: record }
       - { name: kernel.event_listener, event: Wexample\SymfonyShop\Event\CartExpiredEvent, method: record }
+      - { name: kernel.event_listener, event: Wexample\SymfonyShop\Event\CartFulfilledEvent, method: record }
+      - { name: kernel.event_listener, event: Wexample\SymfonyShop\Event\LowStockEvent, method: record }
