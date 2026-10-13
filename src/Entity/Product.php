@@ -27,12 +27,11 @@ use Wexample\SymfonyShop\Repository\ProductRepository;
 #[ORM\Table(name: 'cart_product')]
 class Product extends AbstractEntity implements PricedInterface, VatRatedInterface
 {
-    /** The type whose files are delivered once paid (DigitalDeliveryHandler). */
-    public const string TYPE_DIGITAL = 'digital';
-
     use PricedSingleTrait;
     use HasPriceVatTrait;
     use HasPriceCurrencyTrait;
+    /** The type whose files are delivered once paid (DigitalDeliveryHandler). */
+    public const string TYPE_DIGITAL = 'digital';
 
     #[ORM\Column(type: Types::STRING, length: 255)]
     protected string $title;
