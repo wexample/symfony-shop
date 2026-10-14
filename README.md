@@ -1,6 +1,6 @@
 # symfony_shop
 
-Version: 4.0.1
+Version: 4.0.2
 
 ## Filling a cart
 
@@ -98,8 +98,8 @@ Visit the [Wexample Suite documentation](https://docs.wexample.com) for the comp
 
 - php: >=8.5
 - wexample/symfony-helpers: >=16.0.0
-- wexample/symfony-money: >=6.0.0
-- wexample/symfony-geo: >=6.0.0
+- wexample/symfony-money: >=7.0.0
+- wexample/symfony-geo: >=7.0.0
 - wexample/symfony-payment: >=4.0.0
 - wexample/symfony-media: >=2.0.0
 
