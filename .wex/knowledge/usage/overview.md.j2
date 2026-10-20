@@ -11,6 +11,20 @@ Items copy the product's price when added: editing a product never changes exist
 
 Shipping costs are a line like any other: a product of its own (type `shipping`) added to the cart, so that the invoice carries it without a field of its own.
 
+## What a product offers
+
+```php
+foreach ($productOfferService->getOffers($ticket) as $offer) {
+    $offer->schedule;       // ?Schedule, still to come
+    $offer->variation;      // ?ProductVariation
+    $offer->priceFinal;     // VAT included, minor units; null for a free amount
+    $offer->remaining;      // null when nothing limits it
+    $offer->availability;   // ProductOfferAvailability: available, limited, sold_out
+}
+```
+
+What a visitor can buy before having a cart, the same wherever it is shown — a product page, a feed, the search engines (symfony-shop-ds describes a product's page with them): one offer per schedule still to come and per variation changing something — its price or its own stock —, plus the product's own offer when it can be bought without such a variation. Its price is computed by a cart item never stored, so it is what a cart charges; it is the catalogue price, a `PriceResolverInterface` deciding for a cart, which a visitor does not have. An offer is `limited` at or under its availability's `lowStockThreshold`. `getRemaining()`, `getSchedules()` and `isSoldOut()` read the same stock for one choice.
+
 ## The buyer
 
 ```php

@@ -19,3 +19,6 @@ services:
 
     Wexample\SymfonyShop\Service\StockService:
         public: true
+
+    Wexample\SymfonyShop\Service\ProductOfferService:
+        public: true
