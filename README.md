@@ -1,6 +1,6 @@
 # symfony_shop
 
-Version: 4.0.4
+Version: 5.0.0
 
 ## Filling a cart
 
@@ -14,6 +14,20 @@ $cartService->attachOwner($cart, (string) $user->getId(), $user->getEmail());
 Items copy the product's price when added: editing a product never changes existing carts. Variations replace the raw price (VAT still applies) or the final price. An item takes its own discount (`setPriceDiscount()`, money or percent), the cart one more on the whole. A product's `maxPerCart` keeps only the last items; `PriceResolverInterface` services set member or group prices.
 
 Shipping costs are a line like any other: a product of its own (type `shipping`) added to the cart, so that the invoice carries it without a field of its own.
+
+## What a product offers
+
+```php
+foreach ($productOfferService->getOffers($ticket) as $offer) {
+    $offer->schedule;       // ?Schedule, still to come
+    $offer->variation;      // ?ProductVariation
+    $offer->priceFinal;     // VAT included, minor units; null for a free amount
+    $offer->remaining;      // null when nothing limits it
+    $offer->availability;   // ProductOfferAvailability: available, limited, sold_out
+}
+```
+
+What a visitor can buy before having a cart, the same wherever it is shown — a product page, a feed, the search engines (symfony-shop-ds describes a product's page with them): one offer per schedule still to come and per variation changing something — its price or its own stock —, plus the product's own offer when it can be bought without such a variation. Its price is computed by a cart item never stored, so it is what a cart charges; it is the catalogue price, a `PriceResolverInterface` deciding for a cart, which a visitor does not have. An offer is `limited` at or under its availability's `lowStockThreshold`. `getRemaining()`, `getSchedules()` and `isSoldOut()` read the same stock for one choice.
 
 ## The buyer
 
@@ -66,6 +80,7 @@ A product overrides both in its metadata (`download_lifetime_days`, `download_ma
 ## Table of Contents
 
 - [Filling a cart](#filling-a-cart)
+- [What a product offers](#what-a-product-offers)
 - [The buyer](#the-buyer)
 - [Checkout](#checkout)
 - [Low stock](#low-stock)
@@ -95,11 +110,11 @@ The suite includes packages for configuration management, file handling, prompts
 ## Dependencies
 
 - php: >=8.5
-- wexample/symfony-helpers: >=17.0.0
+- wexample/symfony-helpers: >=18.0.0
 - wexample/symfony-money: >=7.0.0
 - wexample/symfony-geo: >=8.0.0
 - wexample/symfony-payment: >=4.0.0
-- wexample/symfony-media: >=4.0.0
+- wexample/symfony-media: >=5.0.0
 
 ## Versioning & Compatibility Policy
 
