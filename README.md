@@ -1,6 +1,6 @@
 # symfony_shop
 
-Version: 4.0.3
+Version: 4.0.4
 
 ## Filling a cart
 
@@ -97,9 +97,9 @@ The suite includes packages for configuration management, file handling, prompts
 - php: >=8.5
 - wexample/symfony-helpers: >=17.0.0
 - wexample/symfony-money: >=7.0.0
-- wexample/symfony-geo: >=7.0.0
+- wexample/symfony-geo: >=8.0.0
 - wexample/symfony-payment: >=4.0.0
-- wexample/symfony-media: >=3.0.0
+- wexample/symfony-media: >=4.0.0
 
 ## Versioning & Compatibility Policy
 

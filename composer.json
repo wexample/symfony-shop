@@ -3,7 +3,7 @@
   "description": "Cart and catalog for Symfony: price snapshots, variations, schedules, stock reservation, checkout through symfony-payment",
   "type": "library",
   "license": "MIT",
-  "version": "4.0.3",
+  "version": "4.0.4",
   "autoload": {
     "psr-4": {
       "Wexample\\SymfonyShop\\": "src/"
@@ -24,9 +24,9 @@
     "php": ">=8.5",
     "wexample/symfony-helpers": ">=17.0.0",
     "wexample/symfony-money": ">=7.0.0",
-    "wexample/symfony-geo": ">=7.0.0",
+    "wexample/symfony-geo": ">=8.0.0",
     "wexample/symfony-payment": ">=4.0.0",
-    "wexample/symfony-media": ">=3.0.0"
+    "wexample/symfony-media": ">=4.0.0"
   },
   "require-dev": {
     "phpunit/phpunit": "^13",
