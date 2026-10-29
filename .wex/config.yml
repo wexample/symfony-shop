@@ -6,7 +6,7 @@ git:
 global:
   name: symfony_shop
   type: app
-  version: 5.0.3
+  version: 5.0.4
 wex:
   migration: 1
   version: 6.0.179
