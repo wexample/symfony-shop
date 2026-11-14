@@ -64,27 +64,46 @@ class StockService
         $connection->beginTransaction();
 
         try {
+            // Every row this cart holds is locked before any is read, and in
+            // the order of their ids: two carts sharing availabilities lock them
+            // in the same order whatever the order of their items, so neither
+            // waits for a row the other holds while holding one it waits for.
+            $holds = [];
+            $toLock = [];
+
             foreach ($cart->getItems() as $item) {
                 foreach ($this->availabilityRepository->findForItem($item) as $availability) {
                     if ($availability->isUnlimited()) {
                         continue;
                     }
 
-                    $this->entityManager->lock($availability, LockMode::PESSIMISTIC_WRITE);
-                    $available = $this->getAvailable($availability, $now)
-                        - $this->sumPending($reservations, $availability);
-
-                    // Thrown before anything is persisted, so the entity manager stays usable.
-                    if ($item->getQuantity() > $available) {
-                        throw new OutOfStockException($availability, $item->getQuantity(), $available);
-                    }
-
-                    $reservations[] = (new StockReservation())
-                        ->setAvailability($availability)
-                        ->setCartItem($item)
-                        ->setQuantity($item->getQuantity())
-                        ->setExpiresAt($expiresAt);
+                    $holds[] = [$item, $availability];
+                    $toLock[spl_object_id($availability)] = $availability;
                 }
+            }
+
+            usort($toLock, static fn (ProductAvailability $a, ProductAvailability $b): int => strcmp((string) $a->getId(), (string) $b->getId()));
+
+            foreach ($toLock as $availability) {
+                $this->entityManager->lock($availability, LockMode::PESSIMISTIC_WRITE);
+            }
+
+            // Read in the order of the cart, as before: the item said out of
+            // stock is the first one there is not enough left for.
+            foreach ($holds as [$item, $availability]) {
+                $available = $this->getAvailable($availability, $now)
+                    - $this->sumPending($reservations, $availability);
+
+                // Thrown before anything is persisted, so the entity manager stays usable.
+                if ($item->getQuantity() > $available) {
+                    throw new OutOfStockException($availability, $item->getQuantity(), $available);
+                }
+
+                $reservations[] = (new StockReservation())
+                    ->setAvailability($availability)
+                    ->setCartItem($item)
+                    ->setQuantity($item->getQuantity())
+                    ->setExpiresAt($expiresAt);
             }
 
             foreach ($reservations as $reservation) {

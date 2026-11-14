@@ -53,10 +53,12 @@ class ProductOfferService
         }
 
         $offers = [];
+        // An availability shared by several offers is counted once for all.
+        $available = [];
 
         foreach ($this->getSchedules($product) ?: [null] as $schedule) {
             foreach ($variations as $variation) {
-                $offers[] = $this->getOffer($product, $schedule, $variation);
+                $offers[] = $this->buildOffer($product, $schedule, $variation, $available);
             }
         }
 
@@ -68,7 +70,22 @@ class ProductOfferService
         ?Schedule $schedule = null,
         ?ProductVariation $variation = null,
     ): ProductOffer {
-        [$remaining, $threshold] = $this->readStock($product, $schedule, $variation);
+        $available = [];
+
+        return $this->buildOffer($product, $schedule, $variation, $available);
+    }
+
+    /**
+     * @param array<int, ?int> $available what is left of each availability
+     *                                    already read, by its object id
+     */
+    private function buildOffer(
+        Product $product,
+        ?Schedule $schedule,
+        ?ProductVariation $variation,
+        array &$available,
+    ): ProductOffer {
+        [$remaining, $threshold] = $this->readStock($product, $schedule, $variation, $available);
 
         return new ProductOffer(
             $product,
@@ -138,7 +155,9 @@ class ProductOfferService
         ?Schedule $schedule = null,
         ?ProductVariation $variation = null,
     ): ?int {
-        return $this->readStock($product, $schedule, $variation)[0];
+        $available = [];
+
+        return $this->readStock($product, $schedule, $variation, $available)[0];
     }
 
     /**
@@ -149,10 +168,12 @@ class ProductOfferService
     {
         $schedules = $this->getSchedules($product) ?: [null];
         $variations = $product->getVariations()->toArray() ?: [null];
+        // An availability shared by several choices is counted once for all.
+        $available = [];
 
         foreach ($schedules as $schedule) {
             foreach ($variations as $variation) {
-                if (0 !== $this->getRemaining($product, $schedule, $variation)) {
+                if (0 !== $this->readStock($product, $schedule, $variation, $available)[0]) {
                     return false;
                 }
             }
@@ -162,6 +183,10 @@ class ProductOfferService
     }
 
     /**
+     * @param array<int, ?int> $available what is left of each availability
+     *                                    already read in this call, by its
+     *                                    object id: filled as they are read
+     *
      * @return array{?int, ?int} what is left, and the low-stock threshold of
      *                           the availability leaving the least
      */
@@ -169,6 +194,7 @@ class ProductOfferService
         Product $product,
         ?Schedule $schedule,
         ?ProductVariation $variation,
+        array &$available,
     ): array {
         $remaining = null;
         $threshold = null;
@@ -182,10 +208,16 @@ class ProductOfferService
                 continue;
             }
 
-            $available = $this->stock->getAvailable($availability);
+            $key = spl_object_id($availability);
 
-            if (null !== $available && (null === $remaining || $available < $remaining)) {
-                $remaining = $available;
+            if (! array_key_exists($key, $available)) {
+                $available[$key] = $this->stock->getAvailable($availability);
+            }
+
+            $left = $available[$key];
+
+            if (null !== $left && (null === $remaining || $left < $remaining)) {
+                $remaining = $left;
                 $threshold = $availability->getLowStockThreshold();
             }
         }

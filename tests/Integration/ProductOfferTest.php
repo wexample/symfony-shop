@@ -7,7 +7,11 @@ use Wexample\SymfonyShop\Entity\ProductVariation;
 use Wexample\SymfonyShop\Entity\Schedule;
 use Wexample\SymfonyShop\Enum\ProductOfferAvailability;
 use Wexample\SymfonyShop\Enum\VariationPriceAction;
+use DateTimeImmutable;
+use Wexample\SymfonyShop\Repository\ProductAvailabilityRepository;
+use Wexample\SymfonyShop\Repository\StockReservationRepository;
 use Wexample\SymfonyShop\Service\ProductOfferService;
+use Wexample\SymfonyShop\Service\StockService;
 
 class ProductOfferTest extends AbstractCartTestCase
 {
@@ -56,6 +60,83 @@ class ProductOfferTest extends AbstractCartTestCase
         $this->assertSame(12000, $offers[0]->priceFinal);
         $this->assertSame('EUR', $offers[0]->currencyCode);
         $this->assertTrue($offers[0]->isSoldOut());
+    }
+
+    public function testSoldOutOnlyWhenEveryScheduleIs(): void
+    {
+        $product = $this->product(1000, 0, slug: 'concert');
+        $friday = (new Schedule())->setDateStart(new \DateTimeImmutable('+1 day'));
+        $saturday = (new Schedule())->setDateStart(new \DateTimeImmutable('+2 days'));
+        $this->em()->persist($friday);
+        $this->em()->persist($saturday);
+        $product
+            ->addAvailability((new ProductAvailability())->setSchedule($friday)->setQuantity(0))
+            ->addAvailability($left = (new ProductAvailability())->setSchedule($saturday)->setQuantity(1));
+        $this->em()->flush();
+
+        $this->assertFalse($this->offers()->isSoldOut($product));
+
+        $left->setQuantity(0);
+        $this->em()->flush();
+
+        $this->assertTrue($this->offers()->isSoldOut($product));
+    }
+
+    public function testSoldOutOnlyWhenEveryVariationIs(): void
+    {
+        $product = $this->product(1000, 0, slug: 'shirt');
+        $small = (new ProductVariation())->setName('size')->setValue('S');
+        $large = (new ProductVariation())->setName('size')->setValue('L');
+        $product->addVariation($small)->addVariation($large);
+        $product->addAvailability((new ProductAvailability())->setVariation($small)->setQuantity(0));
+        $this->em()->flush();
+
+        // The large one has no stock of its own: nothing limits it.
+        $this->assertFalse($this->offers()->isSoldOut($product));
+
+        $product->addAvailability((new ProductAvailability())->setVariation($large)->setQuantity(0));
+        $this->em()->flush();
+
+        $this->assertTrue($this->offers()->isSoldOut($product));
+    }
+
+    public function testAnAvailabilitySharedByOffersIsReadOnce(): void
+    {
+        $product = $this->product(1000, 0, slug: 'festival');
+        $friday = (new Schedule())->setDateStart(new \DateTimeImmutable('+1 day'));
+        $saturday = (new Schedule())->setDateStart(new \DateTimeImmutable('+2 days'));
+        $this->em()->persist($friday);
+        $this->em()->persist($saturday);
+        // The site's capacity, every day, and each day's own.
+        $product
+            ->addAvailability((new ProductAvailability())->setQuantity(4))
+            ->addAvailability((new ProductAvailability())->setSchedule($friday)->setQuantity(2))
+            ->addAvailability((new ProductAvailability())->setSchedule($saturday)->setQuantity(7));
+        $this->em()->flush();
+
+        $stock = new class(
+            $this->em(),
+            static::getContainer()->get(ProductAvailabilityRepository::class),
+            static::getContainer()->get(StockReservationRepository::class),
+            static::getContainer()->get('event_dispatcher'),
+        ) extends StockService {
+            public int $reads = 0;
+
+            public function getAvailable(
+                ProductAvailability $availability,
+                ?DateTimeImmutable $now = null
+            ): ?int {
+                ++$this->reads;
+
+                return parent::getAvailable($availability, $now);
+            }
+        };
+        $offers = (new ProductOfferService($stock))->getOffers($product);
+
+        // The tightest availability of each day wins.
+        $this->assertSame([2, 4], [$offers[0]->remaining, $offers[1]->remaining]);
+        // Three availabilities, three reads: the shared one is not read per day.
+        $this->assertSame(3, $stock->reads);
     }
 
     private function offers(): ProductOfferService
