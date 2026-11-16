@@ -1,6 +1,6 @@
 # symfony_shop
 
-Version: 5.0.4
+Version: 6.0.0
 
 Cart and catalog for Symfony: price snapshots, variations, schedules, stock reservation, checkout through symfony-payment
 
