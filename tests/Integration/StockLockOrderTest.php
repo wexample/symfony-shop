@@ -39,7 +39,7 @@ class StockLockOrderTest extends AbstractCartTestCase
         $this->carts()->addProduct($cart, $later);
         $this->carts()->addProduct($cart, $earlier);
 
-        $recorder = new class($this->em()) extends EntityManagerDecorator {
+        $recorder = new class ($this->em()) extends EntityManagerDecorator {
             /** @var list<string> */
             public array $locked = [];
 

@@ -2,12 +2,12 @@
 
 namespace Wexample\SymfonyShop\Tests\Integration;
 
+use DateTimeImmutable;
 use Wexample\SymfonyShop\Entity\ProductAvailability;
 use Wexample\SymfonyShop\Entity\ProductVariation;
 use Wexample\SymfonyShop\Entity\Schedule;
 use Wexample\SymfonyShop\Enum\ProductOfferAvailability;
 use Wexample\SymfonyShop\Enum\VariationPriceAction;
-use DateTimeImmutable;
 use Wexample\SymfonyShop\Repository\ProductAvailabilityRepository;
 use Wexample\SymfonyShop\Repository\StockReservationRepository;
 use Wexample\SymfonyShop\Service\ProductOfferService;
@@ -114,7 +114,7 @@ class ProductOfferTest extends AbstractCartTestCase
             ->addAvailability((new ProductAvailability())->setSchedule($saturday)->setQuantity(7));
         $this->em()->flush();
 
-        $stock = new class(
+        $stock = new class (
             $this->em(),
             static::getContainer()->get(ProductAvailabilityRepository::class),
             static::getContainer()->get(StockReservationRepository::class),
