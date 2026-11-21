@@ -15,6 +15,7 @@ use Wexample\SymfonyMoney\Interface\PricedInterface;
 use Wexample\SymfonyMoney\Interface\VatRatedInterface;
 use Wexample\SymfonyShop\Enum\ProductStatus;
 use Wexample\SymfonyShop\Repository\ProductRepository;
+use Wexample\SymfonyTranslations\Attribute\Translatable;
 
 /**
  * Something sold through a cart. Its price is copied into each cart item when added,
@@ -22,6 +23,10 @@ use Wexample\SymfonyShop\Repository\ProductRepository;
  *
  * `type` selects the handlers run when an item of this product is paid
  * (CartItemPaidHandlerInterface), e.g. "membership", "donation", "ticket".
+ *
+ * Its title and description are written in the default language and served in
+ * the reader's (#[Translatable]); a cart item keeps the title it was added
+ * with, as the order was placed.
  */
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 #[ORM\Table(name: 'cart_product')]
@@ -33,12 +38,14 @@ class Product extends AbstractEntity implements PricedInterface, VatRatedInterfa
     /** The type whose files are delivered once paid (DigitalDeliveryHandler). */
     public const string TYPE_DIGITAL = 'digital';
 
+    #[Translatable]
     #[ORM\Column(type: Types::STRING, length: 255)]
     protected string $title;
 
     #[ORM\Column(type: Types::STRING, length: 255, unique: true)]
     protected string $slug;
 
+    #[Translatable]
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     protected ?string $description = null;
 

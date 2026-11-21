@@ -23,6 +23,7 @@
   "require": {
     "php": ">=8.5",
     "wexample/symfony-helpers": ">=19.3.0",
+    "wexample/symfony-translations": ">=20.0.1",
     "wexample/symfony-money": ">=9.0.0",
     "wexample/symfony-geo": ">=10.0.0",
     "wexample/symfony-payment": ">=7.0.0",
